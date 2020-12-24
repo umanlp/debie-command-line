@@ -3,6 +3,10 @@ from datetime import datetime
 import click
 import os
 
+import numpy
+
+# print(numpy.load("vocab-debiased.vocab.npy", allow_pickle=True))
+
 """ CLI-TOOL """
 os.system("")
 print("""   """)
@@ -289,6 +293,12 @@ def select_debiasing(input):
     if input == "GBDDBAM" or input == "gbddbam" or input == "gbddXbam":
         debiasing = "gbddXbam"
         return select_pca()
+    if input == "fullgbdd":
+        debiasing = "fullgbdd"
+        return exe_debiasing()
+    if input == "fullbam":
+        debiasing = "fullbam"
+        return exe_debiasing()
     print("\033[93m" + input + ' is no accepted input value as debiasing method' + "\033[0m")
     return select_debiasing()
 
@@ -372,12 +382,23 @@ def exe_debiasing():
 
     print("\nDEBIE -- " + debiasing + "-Debiasing started at " + str(datetime.now()))
     bar = {"space": space, "lower": lower, "pca": pca, "uploaded": uploaded}
-    response, status_code = debiasing_controller.debiasing(debiasing, specification_data, bar)
-    filename = specification_file.replace(".json", "").replace(".txt", "") + "-debiased" + ".json"
-    file = open(filename, "w")
-    file.write(response)
-    print("\n\033[96m" + "DEBIE -- Debiased Space saved as " + filename + "\033[0m")
-    print("    Time: " + str(datetime.now()) + "\n")
+
+    if debiasing == "fullbam" or debiasing == "fullgbdd":
+        new_vocab, new_vecs = debiasing_controller.debiasing(debiasing, specification_data, bar)
+        vocab_filename = "vocab-debiased.vocab"
+        vecs_filename = "vecs-debiased.vecs"
+        numpy.save(vocab_filename, new_vocab, True)
+        numpy.save(vecs_filename, new_vecs, True)
+        print("\n\033[96m" + "DEBIE -- Debiased Space saved as " + vocab_filename + " and " + vecs_filename + "\033[0m")
+        print("    Time: " + str(datetime.now()) + "\n")
+
+    else:
+        response, status_code = debiasing_controller.debiasing(debiasing, specification_data, bar)
+        filename = specification_file.replace(".json", "").replace(".txt", "") + "-debiased" + ".json"
+        file = open(filename, "w")
+        file.write(response)
+        print("\n\033[96m" + "DEBIE -- Debiased Space saved as " + filename + "\033[0m")
+        print("    Time: " + str(datetime.now()) + "\n")
 
     return select_method
 

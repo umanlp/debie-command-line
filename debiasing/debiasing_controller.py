@@ -3,6 +3,8 @@ import logging
 from controller import json_controller, calculation, augmentation_retrieval, specification_controller
 from debiasing import bam, gbdd
 
+import data_controller
+
 
 def debiasing(methods, content, bar):
     logging.info("Debiasing-Engine: Started")
@@ -66,6 +68,20 @@ def debiasing(methods, content, bar):
     if methods == 'gbddXbam':
         new_vecs, t1_deb, t2_deb, a1_deb, a2_deb = debiasing_gbdd_bam(equality_sets, vocab, vecs, t1_list, t2_list,
                                                                       a1_list, a2_list)
+    # TODO: change spaces to right versions!
+    # TODO: Allow second output format ==> Write to one-file dict
+
+    if methods == 'fullbam':
+        vocab = data_controller.fasttext_vocab
+        vecs = data_controller.fasttext_vectors
+        vocab, new_vecs = full_debiasing_bam(equality_sets, vocab, vecs)
+        return vocab, vecs
+    if methods == 'fullgbdd':
+        vocab = data_controller.fasttext_vocab
+        vecs = data_controller.fasttext_vectors
+        vocab, new_vecs = full_debiasing_gbdd(equality_sets, vocab, vecs)
+        return vocab,vecs
+
     if pca == 'true':
         biased_space = calculation.principal_componant_analysis2(vecs)
         debiased_space = calculation.principal_componant_analysis2(new_vecs)
@@ -116,16 +132,41 @@ def debiasing_gbdd(equality_sets, vocab, vecs, t1_list, t2_list, a1_list, a2_lis
 
 
 def debiasing_bam_gbdd(equality_sets, vocab, vecs, t1_list, t2_list, a1_list, a2_list):
-    new_vocab, new_vecs = bam.debias_proc(equality_sets, vocab, vecs)
-    v_b = gbdd.get_bias_direction(equality_sets, new_vecs, new_vocab)
-    new_vocab, new_vecs = gbdd.debias_direction_linear(v_b, new_vecs)
-    t1, t2, a1, a2 = calculation.vocabs_to_dicts(new_vocab, new_vecs, t1_list, t2_list, a1_list, a2_list)
+    new_vecs, proj_mat = bam.debias_proc(equality_sets, vocab, vecs)
+    v_b = gbdd.get_bias_direction(equality_sets, new_vecs, vocab)
+    new_vecs = gbdd.debias_direction_linear(v_b, new_vecs)
+    t1, t2, a1, a2 = calculation.vocabs_to_dicts(vocab, new_vecs, t1_list, t2_list, a1_list, a2_list)
     return new_vecs, t1, t2, a1, a2
 
 
 def debiasing_gbdd_bam(equality_sets, vocab, vecs, t1_list, t2_list, a1_list, a2_list):
     v_b = gbdd.get_bias_direction(equality_sets, vecs, vocab)
-    new_vocab, new_vecs = gbdd.debias_direction_linear(v_b, vecs)
-    new_vocab, new_vecs = bam.debias_proc(equality_sets, new_vocab, new_vecs)
-    t1, t2, a1, a2 = calculation.vocabs_to_dicts(new_vocab, new_vecs, t1_list, t2_list, a1_list, a2_list)
+    new_vecs = gbdd.debias_direction_linear(v_b, vecs)
+    new_vecs, proj_mat = bam.debias_proc(equality_sets, vocab, new_vecs)
+    t1, t2, a1, a2 = calculation.vocabs_to_dicts(vocab, new_vecs, t1_list, t2_list, a1_list, a2_list)
     return new_vecs, t1, t2, a1, a2
+
+
+def full_debiasing_bam(equality_sets, vocab, vecs):
+    new_vecs, proj_mat = bam.debias_proc(equality_sets, vocab, vecs)
+    return vocab, new_vecs
+
+
+def full_debiasing_gbdd(equality_sets, vocab, vecs):
+    v_b = gbdd.get_bias_direction(equality_sets, vocab, vecs)
+    new_vecs = gbdd.debias_direction_linear(v_b, vecs)
+    return vocab, new_vecs
+
+
+def full_debiasing_bam_gbdd(equality_sets, vocab, vecs):
+    new_vecs, proj_mat = bam.debias_proc(equality_sets, vocab, vecs)
+    v_b = gbdd.get_bias_direction(equality_sets, new_vecs, vocab)
+    new_vecs = gbdd.debias_direction_linear(v_b, new_vecs)
+    return vocab, new_vecs
+
+
+def full_debiasing_gbdd_bam(equality_sets, vocab, vecs):
+    v_b = gbdd.get_bias_direction(equality_sets, vocab, vecs)
+    new_vecs = gbdd.debias_direction_linear(v_b, vecs)
+    new_vecs, proj_mat = bam.debias_proc(equality_sets, vocab, new_vecs)
+    return vocab, new_vecs
