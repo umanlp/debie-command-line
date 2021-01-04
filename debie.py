@@ -86,12 +86,12 @@ specification_data = {}
 
 
 @click.command()
-@click.option('--selection', prompt="Evaluate an bias specification or debias an embedding space")
+@click.option('--selection', prompt="Evaluate a bias specification or debias an embedding space")
 def select_method(selection):
     global method
     if selection == "help":
         print(help_string)
-        return select_method
+        return select_method()
     if selection == "e" or selection == "eval" or selection == "evaluation":
         method = "evaluation"
         if space != "" and specification_file != "":
@@ -109,11 +109,11 @@ def select_method(selection):
 
 
 @click.command()
-@click.option('--input', prompt="Continue with actual data")
+@click.option('--input', prompt="Continue with current data")
 def continue_with_prev_input(input):
     if input == "help":
         print(help_string)
-        return continue_with_prev_input
+        return continue_with_prev_input()
     if input == "y" or input == "yes" or input == "Yes" or input == "YES":
         if method == "evaluation":
             return select_scores()
@@ -133,7 +133,7 @@ def select_space(input):
     global uploaded
     if input == "help":
         print(help_string)
-        return select_space
+        return select_space()
     if input == "f" or input == "fasttext":
         space = "fasttext"
         return select_specification_file()
@@ -379,7 +379,7 @@ def exe_debiasing():
     print("\n\033[96m" + "DEBIE -- Debiased Space saved as " + filename + "\033[0m")
     print("    Time: " + str(datetime.now()) + "\n")
 
-    return select_method
+    return select_method()
 
 
 @click.command()
