@@ -58,7 +58,6 @@ def get_vectors_for_spec(space, lower, uploaded, t1, t2, a1, a2, aug1=None, aug2
             aug1 = [x.lower() for x in aug1]
             aug2 = [x.lower() for x in aug2]
     if space == 'fasttext':
-
         t1_found, t1_not_found = retrieve_vector_multiple(ft_vocab, ft_vecs, t1)
         t2_found, t2_not_found = retrieve_vector_multiple(ft_vocab, ft_vecs, t2)
         a1_found, a1_not_found = retrieve_vector_multiple(ft_vocab, ft_vecs, a1)
@@ -107,8 +106,8 @@ def get_vectors_for_spec(space, lower, uploaded, t1, t2, a1, a2, aug1=None, aug2
         # deleted_keys += aug_del
         aug1 = aug1_found
         aug2 = aug2_found
-        logging.info("SpecController: Returning found vectors")
-        logging.info("SpecController: NotFound: " + str(not_found) + " ; DeletedKeys: " + str(deleted_keys))
+        # logging.info("SpecController: Returning found vectors")
+        # logging.info("SpecController: NotFound: " + str(not_found) + " ; DeletedKeys: " + str(deleted_keys))
         return t1, t2, a1, a2, aug1, aug2, not_found, deleted_keys
 
     return t1, t2, a1, a2, not_found, deleted_keys

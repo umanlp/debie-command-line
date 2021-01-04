@@ -75,6 +75,7 @@ print("")
 method = ""
 uploaded = ""
 space = ""
+json_value = ""
 lower = ""
 scores = ""
 debiasing = ""
@@ -318,8 +319,9 @@ def bias_evaluation():
     global specification_data
     global lower
     global scores
+    global json_value
     print("\nDEBIE -- Bias Evaluation with " + scores + " scores started at " + str(datetime.now()))
-    bar = {"space": space, "lower": lower, "uploaded": uploaded}
+    bar = {"space": space, "lower": lower, "uploaded": uploaded, "json": json_value}
     scores, used_space, used_lower, not_found, deleted = evaluation_controller.evaluation(scores, specification_data, bar)
     output = scores_to_output(scores, used_space, used_lower, not_found, deleted)
     print(output)
@@ -385,6 +387,8 @@ def exe_debiasing():
 @click.command()
 @click.option('--input', prompt='Evaluate test set on debiased space')
 def continue_evaluation(input):
+    global space
+    global json_value
     if input == "help":
         print(help_string)
         return select_pca
@@ -394,11 +398,10 @@ def continue_evaluation(input):
         return select_method()
     if input == "t" or input == "true" or input == "True":
         space = 'uploaded'
-        # TODO: Use debiased data here ---
+        json_value = 'true'
         return bias_evaluation()
     print("\033[93m" + input + ' is no accepted input value for PCA.' + "\033[0m")
     return select_pca()
-
 
 
 if __name__ == '__main__':

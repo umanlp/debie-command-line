@@ -94,12 +94,17 @@ def load_embeddings_by_start():
     fasttext_vocab, fasttext_vectors = load_binary_embeddings(fasttext_200k_vocab, fasttext_200k_vectors, inverse=False,
                                                               normalize=False)
     print("  Loaded fastText word embeddings.")
-    glove_vocab, glove_vectors = load_binary_embeddings(glove_200k_vocab, glove_200k_vectors, inverse=False,
-                                                        normalize=False)
-    print("  Loaded GloVe word embeddings.")
-    cbow_vocab, cbow_vectors = load_binary_embeddings(cbow_200k_vocab, cbow_200k_vectors, inverse=False,
-                                                      normalize=False)
-    print("  Loaded CBOW word embeddings.")
+    # glove_vocab, glove_vectors = load_binary_embeddings(glove_200k_vocab, glove_200k_vectors, inverse=False,
+    #                                                     normalize=False)
+    # print("  Loaded GloVe word embeddings.")
+    # cbow_vocab, cbow_vectors = load_binary_embeddings(cbow_200k_vocab, cbow_200k_vectors, inverse=False,
+    #                                                  normalize=False)
+    # print("  Loaded CBOW word embeddings.")
+    glove_vocab = {}
+    cbow_vocab = {}
+    glove_vectors = []
+    cbow_vectors = []
+
     return fasttext_vocab, fasttext_vectors, glove_vocab, glove_vectors, cbow_vocab, cbow_vectors
 
 
