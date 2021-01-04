@@ -1,7 +1,7 @@
 import logging
 
 from controller import json_controller, calculation, augmentation_retrieval, specification_controller
-from debiasing import bam, gbdd
+from debiasing_models import bam, gbdd
 
 
 def debiasing(methods, content, bar):

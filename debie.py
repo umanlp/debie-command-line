@@ -16,7 +16,7 @@ print("\033[96m" + """ WELCOME TO
 """)
 
 print(" DEBiasing embeddings Implicitly and Explicitly ")
-print(" An application for debiasing embedding spaces and bias evaluation of explicit and implicit bias specifications"
+print(" An application for debiasing_models embedding spaces and bias evaluation of explicit and implicit bias specifications"
       + "\033[0m")
 print("\n")
 
@@ -27,7 +27,7 @@ help_string = """ ---- Allowed Input Values: ----
 You can restart the input data collection anytime by typing "restart" as input value.
 
 For starting bias evaluation:           "e", "eval", "evaluation"
-For starting debiasing:                 "d", "deb", "debias", "debiasing"
+For starting debiasing_models:                 "d", "deb", "debias", "debiasing_models"
 
 For selecting an embedding space:       "f" or "fasttext" to use the fastText space
                                         "g" or "glove" to use the GloVe space
@@ -63,7 +63,7 @@ import data_controller
 import upload_controller
 
 from bias_evaluation import evaluation_controller
-from debiasing import debiasing_controller
+from debiasing_models import debiasing_controller
 
 print("\033[92m" + " --- COMPLETED --- " + "\033[0m")
 print("")
@@ -99,8 +99,8 @@ def select_method(selection):
             return continue_with_prev_input()
         print("")
         return select_space()
-    if selection == "d" or selection == "deb" or selection == "debias" or selection == "debiasing":
-        method = "debiasing"
+    if selection == "d" or selection == "deb" or selection == "debias" or selection == "debiasing_models":
+        method = "debiasing_models"
         if space != "" and specification_file != "":
             return continue_with_prev_input()
         print("")
@@ -118,12 +118,12 @@ def continue_with_prev_input(input):
     if input == "y" or input == "yes" or input == "Yes" or input == "YES":
         if method == "evaluation":
             return select_scores()
-        if method == "debiasing":
+        if method == "debiasing_models":
             return select_debiasing()
     if input == "n" or input == "no" or input == "No" or input == "NO":
         if method == "evaluation":
             return select_space()
-        if method == "debiasing":
+        if method == "debiasing_models":
             return select_space()
 
 
@@ -290,7 +290,7 @@ def select_debiasing(input):
     if input == "GBDDBAM" or input == "gbddbam" or input == "gbddXbam":
         debiasing = "gbddXbam"
         return select_pca()
-    print("\033[93m" + input + ' is no accepted input value as debiasing method' + "\033[0m")
+    print("\033[93m" + input + ' is no accepted input value as debiasing_models method' + "\033[0m")
     return select_debiasing()
 
 

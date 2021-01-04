@@ -5,7 +5,7 @@ import click
 import json
 
 # Evaluation with config file
-from debiasing import debiasing_controller
+from debiasing_models import debiasing_controller
 
 
 @click.command()
@@ -27,13 +27,14 @@ def configfile(configfile):
         debie.json_value = config_data['json']
     if 'lower' in config_data:
         debie.lower = config_data['lower']
-    if 'debiasing' in config_data:
-        debie.debiasing = config_data['debiasing']
+    if 'debiasing_models' in config_data:
+        debie.debiasing = config_data['debiasing_models']
     else:
         debie.debiasing = 'bam'
     if 'pca' in config_data:
         debie.pca = config_data['pca']
     debie.specification_data = config_data
+    debie.specification_file = configfile
     return exe_debiasing()
 
 
