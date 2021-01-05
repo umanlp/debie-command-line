@@ -43,6 +43,25 @@ def debiasing(methods, content, bar):
         for t2 in aug2_list:
             equality_sets.append((t1, t2))
 
+    vocab, vecs = specification_controller.return_vocab_vecs(space, uploaded)
+    if methods == 'full-bam':
+        new_vecs, t1_deb, t2_deb, a1_deb, a2_deb = debiasing_bam(equality_sets, vocab, vecs, t1_list, t2_list, a1_list,
+                                                                 a2_list)
+        return vocab, new_vecs
+    if methods == 'full-gbdd':
+
+        new_vecs, t1_deb, t2_deb, a1_deb, a2_deb = debiasing_gbdd(equality_sets, vocab, vecs, t1_list,
+                                                                  t2_list, a1_list, a2_list)
+        return vocab, new_vecs
+    if methods == 'full-bamXgbdd':
+        new_vecs, t1_deb, t2_deb, a1_deb, a2_deb = debiasing_bam_gbdd(equality_sets, vocab, vecs, t1_list, t2_list,
+                                                                      a1_list, a2_list)
+        return vocab, new_vecs
+    if methods == 'full-gbddXbam':
+        new_vecs, t1_deb, t2_deb, a1_deb, a2_deb = debiasing_gbdd_bam(equality_sets, vocab, vecs, t1_list, t2_list,
+                                                                      a1_list, a2_list)
+        return vocab, new_vecs
+
     t1, t2, a1, a2, aug1, aug2, not_found, deleted = specification_controller. \
         get_vectors_for_spec(space, lower, uploaded, t1_list, t2_list, a1_list, a2_list, aug1_list, aug2_list)
     vocab, vecs, lex_dict = {}, [], {}
@@ -66,6 +85,7 @@ def debiasing(methods, content, bar):
     if methods == 'gbddXbam':
         new_vecs, t1_deb, t2_deb, a1_deb, a2_deb = debiasing_gbdd_bam(equality_sets, vocab, vecs, t1_list, t2_list,
                                                                       a1_list, a2_list)
+
     if pca == 'true':
         biased_space = calculation.principal_componant_analysis2(vecs)
         debiased_space = calculation.principal_componant_analysis2(new_vecs)

@@ -3,6 +3,8 @@ from datetime import datetime
 import click
 import os
 
+import numpy
+
 """ CLI-TOOL """
 os.system("")
 print("""   """)
@@ -49,7 +51,10 @@ Evaluation scores:                      "a" or "all", "e" or "ect", "b" or "bat"
                                         "s" or "svm", 
                                         "word" or "wordsim" or "wordsim-353, "sim" or "simlex" or "simlex-999"
                                         
-Debiasing methods:                       "g" or "gbdd", "b" or "bam", "bamxgbdd", "gbddxbam"
+Debiasing methods:                       "g" or "gbdd", "b" or "bam", "bamxgbdd", "gbddxbam".
+
+Save complete vector space:             "t" or "true" or "True" to save complete space, "f", "false", or "False" to 
+                                        only save the space containing the used terms.
 
 Enable/Disable PCA output:              "t" or "true" or "True" to enable, "f", "false", or "False" to disable pca.
 
@@ -280,18 +285,57 @@ def select_debiasing(input):
         return select_method()
     if input == "BAM" or input == "bam" or input == "b":
         debiasing = "bam"
-        return select_pca()
+        return full_debiasing_output()
     if input == "GBDD" or input == "gbdd" or input == "g":
         debiasing = "gbdd"
-        return select_pca()
+        return full_debiasing_output()
     if input == "BAMGBDD" or input == "bamgbdd" or input == "bamXgbdd":
         debiasing = "bamXgbdd"
-        return select_pca()
+        return full_debiasing_output()
     if input == "GBDDBAM" or input == "gbddbam" or input == "gbddXbam":
         debiasing = "gbddXbam"
-        return select_pca()
+        return full_debiasing_output()
     print("\033[93m" + input + ' is no accepted input value as debiasing_models method' + "\033[0m")
     return select_debiasing()
+
+
+@click.command()
+@click.option('--input', prompt="Save complete vector space")
+def full_debiasing_output(input):
+    global debiasing
+
+    if input == "help":
+        print(help_string)
+        return full_debiasing_output()
+    if input == "restart":
+        return select_method()
+    if input == "f" or input == "false" or input == "False":
+        return select_pca()
+    if input == "t" or input == "true" or input == "True":
+        debiasing = "full-" + debiasing
+        return save_full_space()
+    print("\033[93m" + input + ' is no accepted input value for lower.' + "\033[0m")
+    return full_debiasing_output()
+
+
+def save_full_space():
+    global space
+    global uploaded
+    global specification_data
+    global specification_file
+    global lower
+    global debiasing
+    global pca
+
+    print("\nDEBIE -- " + debiasing + "-Debiasing started at " + str(datetime.now()))
+    bar = {"space": space, "lower": lower, "pca": pca, "uploaded": uploaded}
+    vocab, vecs = debiasing_controller.debiasing(debiasing, specification_data, bar)
+    vocab_filename = specification_file.replace(".json", "-debiased.vocab")
+    vecs_filename = specification_file.replace(".json", "-debiased.vecs")
+    numpy.save(vocab_filename, vocab, allow_pickle=True)
+    numpy.save(vecs_filename, vecs, allow_pickle=True)
+    print("\n\033[96m" + "DEBIE -- Debiased Space saved as " + vocab_filename + " and  " + vecs_filename + "\033[0m")
+    print("    Time: " + str(datetime.now()) + "\n")
 
 
 @click.command()
