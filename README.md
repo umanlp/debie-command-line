@@ -1,4 +1,4 @@
-# DEBIE Command-line Tool
+# DEBIE Command-Line Tool
 
 CLI Tool for the web application DEBIE.  
 This tool can evaluate bias specifications and debias embedding spaces based on explicit bias specifications.  
