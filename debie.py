@@ -18,7 +18,7 @@ print("\033[96m" + """ WELCOME TO
 """)
 
 print(" DEBiasing embeddings Implicitly and Explicitly ")
-print(" An application for debiasing_models embedding spaces and bias evaluation of explicit and implicit bias specifications"
+print(" An application for debiasing embedding spaces and bias evaluation of explicit and implicit bias specifications"
       + "\033[0m")
 print("\n")
 
@@ -29,7 +29,7 @@ help_string = """ ---- Allowed Input Values: ----
 You can restart the input data collection anytime by typing "restart" as input value.
 
 For starting bias evaluation:           "e", "eval", "evaluation"
-For starting debiasing_models:                 "d", "deb", "debias", "debiasing_models"
+For starting debiasing:                 "d", "deb", "debias", "debiasing"
 
 For selecting an embedding space:       "f" or "fasttext" to use the fastText space
                                         "g" or "glove" to use the GloVe space
@@ -68,7 +68,7 @@ import data_controller
 import upload_controller
 
 from bias_evaluation import evaluation_controller
-from debiasing_models import debiasing_controller
+from debiasing import debiasing_controller
 
 print("\033[92m" + " --- COMPLETED --- " + "\033[0m")
 print("")
@@ -104,8 +104,8 @@ def select_method(selection):
             return continue_with_prev_input()
         print("")
         return select_space()
-    if selection == "d" or selection == "deb" or selection == "debias" or selection == "debiasing_models":
-        method = "debiasing_models"
+    if selection == "d" or selection == "deb" or selection == "debias" or selection == "debiasing":
+        method = "debiasing"
         if space != "" and specification_file != "":
             return continue_with_prev_input()
         print("")
@@ -123,12 +123,12 @@ def continue_with_prev_input(input):
     if input == "y" or input == "yes" or input == "Yes" or input == "YES":
         if method == "evaluation":
             return select_scores()
-        if method == "debiasing_models":
+        if method == "debiasing":
             return select_debiasing()
     if input == "n" or input == "no" or input == "No" or input == "NO":
         if method == "evaluation":
             return select_space()
-        if method == "debiasing_models":
+        if method == "debiasing":
             return select_space()
 
 
@@ -295,7 +295,7 @@ def select_debiasing(input):
     if input == "GBDDBAM" or input == "gbddbam" or input == "gbddXbam":
         debiasing = "gbddXbam"
         return full_debiasing_output()
-    print("\033[93m" + input + ' is no accepted input value as debiasing_models method' + "\033[0m")
+    print("\033[93m" + input + ' is no accepted input value as debiasing method' + "\033[0m")
     return select_debiasing()
 
 
@@ -448,5 +448,97 @@ def continue_evaluation(input):
     return select_pca()
 
 
+def bias_evaluation_config(configfile):
+    global space
+    global uploaded
+    global json_value
+    global lower
+    global scores
+    global specification_data
+
+    with open(configfile) as json_file:
+        config_data = json.load(json_file)
+    if 'space' in config_data:
+        space = config_data['space']
+    else:
+        space = 'fasttext'
+    if 'uploaded' in config_data:
+        uploaded = config_data['uploaded']
+    else:
+        uploaded = "false"
+    if 'json' in config_data:
+        json_value = config_data['json']
+    if 'lower' in config_data:
+        lower = config_data['lower']
+    if 'scores' in config_data:
+        scores = config_data['scores']
+    else:
+        scores = 'all'
+    specification_data = config_data
+
+    print("\nDEBIE -- Bias Evaluation with " + scores + " scores started at " + str(datetime.now()))
+    bar = {"space": space, "lower": lower, "uploaded": uploaded, "json": json_value}
+    scores, used_space, used_lower, not_found, deleted = evaluation_controller.evaluation(scores, specification_data, bar)
+    output = scores_to_output(scores, used_space, used_lower, not_found, deleted)
+    print(output)
+    return output
+
+
+def debiasing_config(configfile):
+    global space
+    global uploaded
+    global json_value
+    global lower
+    global debiasing
+    global specification_data
+    global specification_file
+
+    with open(configfile) as json_file:
+        config_data = json.load(json_file)
+
+    if 'space' in config_data:
+        space = config_data['space']
+    else:
+        space = 'fasttext'
+    if 'uploaded' in config_data:
+        uploaded = config_data['uploaded']
+    else:
+        uploaded = "false"
+    if 'json' in config_data:
+        json_value = config_data['json']
+    if 'lower' in config_data:
+        lower = config_data['lower']
+    if 'debiasing' in config_data:
+        debiasing = config_data['debiasing']
+    else:
+        debiasing = 'bam'
+    if 'pca' in config_data:
+        pca = config_data['pca']
+    specification_data = config_data
+    specification_file = configfile
+
+    print("\nDEBIE -- " + debiasing + "-Debiasing started at " + str(datetime.now()))
+    bar = {"space": space, "lower": lower, "pca": pca, "uploaded": uploaded}
+    response, status_code = debiasing_controller.debiasing(debiasing, specification_data, bar)
+    filename = specification_file.replace(".json", "").replace(".txt", "") + "-debiased" + ".json"
+    file = open(filename, "w")
+    file.write(response)
+    print("\n\033[96m" + "DEBIE -- Debiased Space saved as " + filename + "\033[0m")
+    print("    Time: " + str(datetime.now()) + "\n")
+
+    return file
+
+
+@click.command()
+@click.option('--mode', type=str)
+@click.option('--config', type=click.Path(exists=True))
+def debie(mode=None, config=None):
+    if mode == 'evaluation':
+        return bias_evaluation_config(config)
+    if mode == 'debiasing':
+        return debiasing_config(config)
+    return select_method()
+
+
 if __name__ == '__main__':
-    select_method()
+    debie()

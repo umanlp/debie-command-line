@@ -47,15 +47,18 @@ def load_augmentations(augmentations_path):
 def load_simlex(path):
     simlex_data = [line.strip() for line in list(codecs.open(path, "r", encoding='utf8', errors='replace').readlines())]
     # print(simlex_data)
-    simlex = [(line.split("\t")[0].lower(), line.split("\t")[1].lower(), float(line.split("\t")[3])) for line in simlex_data]
+    simlex = [(line.split("\t")[0].lower(), line.split("\t")[1].lower(), float(line.split("\t")[3])) for line in
+              simlex_data]
     # print(path)
     # print(simlex)
     return simlex
 
 
 def load_wordsim(path):
-    wordsim_data = [line.strip() for line in list(codecs.open(path, "r", encoding='utf8', errors='replace').readlines())]
-    wordsim = [(line.split("\t")[1].lower(), line.split("\t")[2].lower(), float(line.split("\t")[3])) for line in wordsim_data]
+    wordsim_data = [line.strip() for line in
+                    list(codecs.open(path, "r", encoding='utf8', errors='replace').readlines())]
+    wordsim = [(line.split("\t")[1].lower(), line.split("\t")[2].lower(), float(line.split("\t")[3])) for line in
+               wordsim_data]
     return wordsim
 
 
@@ -94,22 +97,15 @@ def load_embeddings_by_start():
     fasttext_vocab, fasttext_vectors = load_binary_embeddings(fasttext_200k_vocab, fasttext_200k_vectors, inverse=False,
                                                               normalize=False)
     print("  Loaded fastText word embeddings.")
-    # glove_vocab, glove_vectors = load_binary_embeddings(glove_200k_vocab, glove_200k_vectors, inverse=False,
-    #                                                     normalize=False)
-    # print("  Loaded GloVe word embeddings.")
-    # cbow_vocab, cbow_vectors = load_binary_embeddings(cbow_200k_vocab, cbow_200k_vectors, inverse=False,
-    #                                                  normalize=False)
-    # print("  Loaded CBOW word embeddings.")
-    glove_vocab = {}
-    cbow_vocab = {}
-    glove_vectors = []
-    cbow_vectors = []
-
+    glove_vocab, glove_vectors = load_binary_embeddings(glove_200k_vocab, glove_200k_vectors, inverse=False,
+                                                        normalize=False)
+    print("  Loaded GloVe word embeddings.")
+    cbow_vocab, cbow_vectors = load_binary_embeddings(cbow_200k_vocab, cbow_200k_vectors, inverse=False,
+                                                      normalize=False)
+    print("  Loaded CBOW word embeddings.")
     return fasttext_vocab, fasttext_vectors, glove_vocab, glove_vectors, cbow_vocab, cbow_vectors
-
 
 
 fasttext_vocab, fasttext_vectors, glove_vocab, glove_vectors, cbow_vocab, cbow_vectors = load_embeddings_by_start()
 simlex_vocab, simlex_data, wordsim_vocab, wordsim_data = load_lex_by_start()
 augmentations = load_augmentations(augmentations_postspec)
-

@@ -15,7 +15,7 @@ uploaded_vocab = {}
 
 
 def get_vocab_vecs_from_upload():
-    if uploaded_binary is 'true':
+    if uploaded_binary == 'true':
         return uploaded_vocab, uploaded_vecs
     else:
         return calculation.dict_to_vocab_vecs(uploaded_space)
