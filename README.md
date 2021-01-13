@@ -23,5 +23,6 @@ For debiasing run following command:
 
 ### Impressum
 This tool is also available as a web-application under: http://wifo5-29.informatik.uni-mannheim.de/  
-The included models and methods are based on the paper "A General Framework for Implicit and Explicit Debiasing of Distributional Word Vector Spaces" by Lauscher et al.
+The included models and methods are based on the paper "A General Framework for Implicit and Explicit Debiasing of Distributional Word Vector Spaces" by Lauscher et al.,
+available under https://arxiv.org/abs/1909.06092.
 This tool has been developed by Niklas Friedrich and Anne Lauscher.
