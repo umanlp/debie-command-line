@@ -19,3 +19,9 @@ For bias evaluation run following command:
 &nbsp;&nbsp;&nbsp;&nbsp;- python debie.py --mode=evaluation --config=path/to/config-file.json  
 For debiasing run following command:  
 &nbsp;&nbsp;&nbsp;&nbsp;- python debie.py --mode=debiasing --config=path/to/config-file.json  
+
+
+### Impressum
+This tool is also available as a web-application under: http://wifo5-29.informatik.uni-mannheim.de/  
+The included models and methods are based on the paper "A General Framework for Implicit and Explicit Debiasing of Distributional Word Vector Spaces" by Lauscher et al.
+This tool has been developed by Niklas Friedrich and Anne Lauscher.
