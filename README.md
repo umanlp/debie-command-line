@@ -16,9 +16,9 @@ For setting up the CLI version of debie, download the GitHub-Code and run follow
 For executing direct evaluation or debiasing commands, please provide the required information in a json-file.  
 An example how this file should look like is uploaded as set8_config_example.json here on GitHub.  
 For bias evaluation run following command:  
-&nbsp;&nbsp;&nbsp;&nbsp;- python debie.py --mode=evaluation --config=path/to/config-file.json  
+&nbsp;&nbsp;&nbsp;&nbsp; python debie.py --mode=evaluation --config=path/to/config-file.json  
 For debiasing run following command:  
-&nbsp;&nbsp;&nbsp;&nbsp;- python debie.py --mode=debiasing --config=path/to/config-file.json  
+&nbsp;&nbsp;&nbsp;&nbsp; python debie.py --mode=debiasing --config=path/to/config-file.json  
 
 
 ### Impressum
