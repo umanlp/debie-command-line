@@ -22,7 +22,13 @@ For debiasing run following command:
 
 
 ### Impressum
-This tool is also available as a web-application under: http://wifo5-29.informatik.uni-mannheim.de/.  
+This tool is also available as a web-application under: http://debie.informatik.uni-mannheim.de/.  
+This tool is also downloadable here: https://drive.google.com/drive/folders/1RDBFwOyPMPWBNL_GC5qplZ0NHDjfqOdc?usp=sharing
 The included models and methods are based on the paper "A General Framework for Implicit and Explicit Debiasing of Distributional Word Vector Spaces" by Lauscher et al.,
 available under https://arxiv.org/abs/1909.06092.  
 This tool has been developed by Niklas Friedrich and Anne Lauscher.
+
+## Repositories
+Web Application Backend: https://github.com/nfriedri/debie-backend
+
+Web Application Frontend: https://github.com/nfriedri/debie-frontend
