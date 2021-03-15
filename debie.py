@@ -7,8 +7,9 @@ import numpy
 
 """ CLI-TOOL """
 os.system("")
-print("""   """)
-print("\033[96m" + """ WELCOME TO
+print("""   """ + "\033[96m")
+print("----------------------------------------------------------------------------------------------------------------")
+print("""" WELCOME TO
  _____  ______ ____ _____ ______ 
  |  __ \|  ____|  _ \_   _|  ____|
  | |  | | |__  | |_) || | | |__   
@@ -18,7 +19,9 @@ print("\033[96m" + """ WELCOME TO
 """)
 
 print(" DEBiasing embeddings Implicitly and Explicitly ")
-print(" An application for debiasing embedding spaces and bias evaluation of explicit and implicit bias specifications"
+print(" An application for debiasing embedding spaces and bias evaluation of explicit and implicit bias specifications \n")
+print(" Created by Niklas Friedrich and Anne Lauscher ")
+print("----------------------------------------------------------------------------------------------------------------"
       + "\033[0m")
 print("\n")
 
